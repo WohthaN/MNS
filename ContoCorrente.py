@@ -11,15 +11,11 @@ def main(operationsArray, interestRate, startValue):
 
 def recursiveMethod(opA, iR, sV):
     y = [sV]
-    iR = 1 + iR
-
     for i in xrange(len(opA)):
         y.append(y[i] * iR + opA[i])
-
-    return (opA+[0],y)
+    return (opA,y)
 
 def resolutiveMethod(opA, iR, sV):
-    iR=1+iR
     y = sV*(iR**(len(opA)))
     for i in xrange(len(opA)):
         y+=opA[i]*(iR**(len(opA)-i-1))
@@ -28,27 +24,37 @@ def resolutiveMethod(opA, iR, sV):
 
 fig, axs = plt.subplots(2, 2, sharex=True, sharey=True)
 
-opA = [random.random()*50 for i in xrange(12)]
-opAc = [25 for i in xrange(12)]
-iR = 0
+steps = 12
+
+opA = [random.random()*50 for i in xrange(steps)]
+opAc = [25 for i in xrange(steps)]
+iR = 1
+iR1 = 1.15
 sV = 100
 
 (ix,iy) = recursiveMethod(opA, iR, sV)
+riy = [resolutiveMethod(opA[0:x],iR,sV) for x in xrange(steps+1)]
 axs[0][0].plot(xrange(len(ix)), ix, 'b-o')
-axs[0][0].plot(xrange(len(iy)), iy, 'b-x')
+axs[0][0].plot(xrange(len(iy)), iy, 'b-')
+axs[0][0].plot(xrange(len(riy)), riy, 'bx')
 
 (ix,iy) = recursiveMethod(opAc, iR, sV)
-axs[0][1].plot(xrange(len(ix)), ix, 'g-s')
-axs[0][1].plot(xrange(len(iy)), iy, 'g-*')
+riy = [resolutiveMethod(opAc[0:x],iR,sV) for x in xrange(steps+1)]
+axs[0][1].plot(xrange(len(ix)), ix, 'g-o')
+axs[0][1].plot(xrange(len(iy)), iy, 'g-')
+axs[0][1].plot(xrange(len(riy)), riy, 'gx')
 
-iR = 0.15
-(ix,iy) = recursiveMethod(opA, iR, sV)
+(ix,iy) = recursiveMethod(opA, iR1, sV)
+riy = [resolutiveMethod(opA[0:x],iR1,sV) for x in xrange(steps+1)]
 axs[1][0].plot(xrange(len(ix)), ix, 'b-o')
-axs[1][0].plot(xrange(len(iy)), iy, 'b-x')
+axs[1][0].plot(xrange(len(iy)), iy, 'b-')
+axs[1][0].plot(xrange(len(riy)), riy, 'bx')
 
-(ix,iy) = recursiveMethod(opAc, iR, sV)
-axs[1][1].plot(xrange(len(ix)), ix, 'g-s')
-axs[1][1].plot(xrange(len(iy)), iy, 'g-*')
+(ix,iy) = recursiveMethod(opAc, iR1, sV)
+riy = [resolutiveMethod(opAc[0:x],iR1,sV) for x in xrange(steps+1)]
+axs[1][1].plot(xrange(len(ix)), ix, 'g-o')
+axs[1][1].plot(xrange(len(iy)), iy, 'g-')
+axs[1][1].plot(xrange(len(riy)), riy, 'gx')
 
 pylab.show()
 #
