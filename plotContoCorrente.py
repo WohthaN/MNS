@@ -11,11 +11,11 @@ fig, axs = plt.subplots(2, 2, sharex=True, sharey=True)
 
 steps = 12
 
-opA = [random.gauss(1,2)*25 for i in xrange(steps)]
+opA = [random.gauss(1,2)*15 for i in xrange(steps)]
 opAc = [25 for i in xrange(steps)]
-iR = 1
-iR1 = 1.1
-sV = 10
+iR = 0
+iR1 = 0.1
+sV = 0
 
 (ix,iy) = recursiveMethod(opA, iR, sV)
 riy = [resolutiveMethod(opA[0:x],iR,sV) for x in xrange(steps+1)]
