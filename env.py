@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from math import *
 
 
-
+mpl.rc('text', usetex='True')
 
 def float_info():
     import sys
