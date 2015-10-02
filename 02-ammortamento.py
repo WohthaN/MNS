@@ -22,7 +22,7 @@ i = 0.05
 for r in range(480,530,5):
     m = [x[0] for x in mutuo(C,i,r)]
     plt.plot(range(len(m)), m, '-'+PLOT_MARKER.next(), label='rata %s' % (r))
-plt.legend(loc='upper left',prop={'size':10})
+plt.legend(loc='upper left',prop={'size':12})
 plt.xlabel('numero rate')
 plt.ylabel('Rimanente da pagare')
 plt.savefig('./figs/02-ammortamento-rata.eps', dpi=1200)
@@ -41,13 +41,13 @@ for N in range(1,102,20):
     plt.plot(range(len(s)), s, '-'+marker, label='n rate %s' % (N))
 
 plt.figure(1)
-plt.legend(loc='upper left',prop={'size':10})
+plt.legend(loc='upper right',prop={'size':12})
 plt.xlabel('numero rate')
 plt.ylabel('Interessi pagati per rata')
 plt.savefig('./figs/02-ammortamento-interessi.eps', dpi=1200)
 
 plt.figure(2)
-plt.legend(loc='upper left',prop={'size':10})
+plt.legend(loc='upper left',prop={'size':12})
 plt.xlabel('numero rate')
 plt.ylabel('Interessi totali')
 plt.savefig('./figs/02-ammortamento-int-totali.eps', dpi=1200)
