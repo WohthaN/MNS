@@ -17,3 +17,15 @@ def float_info():
 
 def float_format(x):
     return "%.100g" % x
+
+def plot_marker_generator():
+    markers = [',','.','1','2','3','4','_','x','|','+']
+    #filled markers , '8','>','<','^','v','o','d','D','h','H','*','p','s'  ]
+    lmarkers = len(markers)
+    c = 0
+    while True:
+        yield markers[c]
+        c += 1
+        c = c%lmarkers
+
+PLOT_MARKER = plot_marker_generator()
