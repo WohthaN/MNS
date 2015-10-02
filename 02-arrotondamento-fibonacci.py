@@ -7,8 +7,10 @@ c0 = 1
 c1 = (1-sqrt(5))/2
 
 # Soluzione Ca = c mediante matrice inversa
-# (lapack automaticamente corregge gli errori di approssimazione
-#  nella risoluzione, dando come soluzioni esattamente 1 e 0)
+# (lapack corregge automaticamente certi errori di approssimazione
+# nella risoluzione, in questo caso dando come soluzioni del sistema Ca=c
+# esattamente 1. e 0.)
+
 C = np.array([[1., 1.],
              [z1, z2]])
 c = np.array([c0, c1])
@@ -28,11 +30,11 @@ def y32(n):
 def y64(n):
     return  a1_64 * ((1+sqrt(5))/2) ** n - a2_64 * ((1-sqrt(5))/2) ** n
 
-n_max = 60
+n_max = 50
 plot_32 = [abs(y32(x)) for x in range(n_max)]
 plot_64 = [abs(y64(x)) for x in range(n_max)]
-plt.plot(range(n_max), plot_32, 'ro', color='blue', label='32 bits')
-plt.plot(range(n_max), plot_64, 'rx', color='red', label='64 bits')
+plt.plot(range(n_max), plot_32, 'ro', color='blue', label='float32')
+plt.plot(range(n_max), plot_64, 'rx', color='red', label='flat64')
 plt.yscale('log')
 plt.legend(loc='upper center')
 plt.xlabel('n')
