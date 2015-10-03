@@ -29,3 +29,5 @@ def plot_marker_generator():
         c = c%lmarkers
 
 PLOT_MARKER = plot_marker_generator()
+
+GRID_OPTIONS = {'b':True, 'which':'both', 'linestyle':':'}
