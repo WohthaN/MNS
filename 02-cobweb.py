@@ -20,10 +20,13 @@ def cobweb(d0, a, s0, b, p0, steps):
 def plot_cobweb(base, P, S, D, Sfun, Dfun, fname):
     plt.figure()
     plt.plot(base, P, label='P')
-    plt.plot(base, S, label='S')
-    plt.plot(base, D, label='D')
+    plt.ylabel('Prezzo')
+    plt.legend(loc='lower right',prop={'size':12})
+    plt.twinx()
+    plt.plot(base, S, label='S', color='g')
+    plt.plot(base, D, label='D', color='r')
     plt.legend(loc='upper right',prop={'size':12})
-    plt.ylabel('Prezzo/Domanda/Offerta')
+    plt.ylabel('Domanda/Offerta')
     plt.xlabel('Iterazione')
     plt.grid(GRID_OPTIONS)
     plt.savefig('./figs/02-cobweb-%s-time.eps'%fname, dpi=1200)
@@ -44,13 +47,13 @@ def plot_cobweb(base, P, S, D, Sfun, Dfun, fname):
     plt.grid(GRID_OPTIONS)
     plt.savefig('./figs/02-cobweb-%s.eps'%fname, dpi=1200)
 
-base, P, S, D, Sfun, Dfun = cobweb(100,0.25, 10,0.15, 10,10)
+base, P, S, D, Sfun, Dfun = cobweb(100,0.15, 10,0.10, 400,10)
 plot_cobweb(base, P, S, D, Sfun, Dfun, 'stable')
 
-base, P, S, D, Sfun, Dfun = cobweb(100,0.25, 10,0.25, 10,10)
+base, P, S, D, Sfun, Dfun = cobweb(100,0.05, 10,0.05, 950,15)
 plot_cobweb(base, P, S, D, Sfun, Dfun, 'pendolum')
 
-base, P, S, D, Sfun, Dfun = cobweb(100,0.20, 10,0.25, 10,10)
+base, P, S, D, Sfun, Dfun = cobweb(100,0.09, 50,0.1, 300,15)
 plot_cobweb(base, P, S, D, Sfun, Dfun, 'divergent')
 
 #plt.show()
