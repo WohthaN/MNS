@@ -1,4 +1,5 @@
 from env import *
+PLOT_MARKER = plot_marker_generator()
 
 # Generatore che calcola il rimanente da pagare dopo una rata
 def mutuo(C, i, r, maxiter=100):

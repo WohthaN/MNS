@@ -1,4 +1,5 @@
 from env import *
+
 # Radici p(z)
 z1 = (1+sqrt(5))/2
 z2 = (1-sqrt(5))/2
