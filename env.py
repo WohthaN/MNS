@@ -25,7 +25,7 @@ def plot_marker_generator():
     c = 0
     while True:
         yield markers[c]
-        c += (c+1)%lmarkers
+        c = (c+1)%lmarkers
 
 def color_map_generator(N):
     '''Returns a function that maps each index in 0, 1, ... N-1 to a distinct
@@ -38,3 +38,4 @@ def color_map_generator(N):
         index = (index+1)%(N)
 
 GRID_OPTIONS = {'b':True, 'which':'both', 'linestyle':':'}
+GRID_OPTIONS_TWIN = {'b':True, 'which':'both', 'linestyle':'-.'}
