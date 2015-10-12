@@ -35,7 +35,7 @@ n_max = 50
 plot_32 = [abs(y32(x)) for x in range(n_max)]
 plot_64 = [abs(y64(x)) for x in range(n_max)]
 plt.plot(range(n_max), plot_32, 'ro', color='blue', label='float32')
-plt.plot(range(n_max), plot_64, 'rx', color='red', label='flat64')
+plt.plot(range(n_max), plot_64, 'rx', color='red', label='float64')
 plt.yscale('log')
 plt.grid(**GRID_OPTIONS)
 plt.legend(loc='upper center')
