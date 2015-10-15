@@ -17,12 +17,13 @@ def cobweb(d0, a, s0, b, p0, steps):
     return base, P, S, D, Sfun, Dfun
 
 base, P, S, D, Sfun, Dfun = cobweb(100,0.15, 10,0.10, 400,10)
-plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-stable', 20)
+plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-stable', 10)
 
 base, P, S, D, Sfun, Dfun = cobweb(100,0.05, 10,0.05, 950,15)
-plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-pendolum', 5)
+plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-pendolum', 2)
 
 base, P, S, D, Sfun, Dfun = cobweb(100,0.09, 50,0.1, 300,15)
-plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-divergent', 30)
+plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-divergent', 15)
 
-#plt.show()
+plt.show()
+
