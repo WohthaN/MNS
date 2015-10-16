@@ -1,8 +1,14 @@
 import numpy as np
 #import scipy as sp
 import matplotlib as mpl
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+from matplotlib import cm
+import matplotlib.ticker as mpl_ticker
+
+
 from math import *
+
 
 
 mpl.rc('text', usetex='True')

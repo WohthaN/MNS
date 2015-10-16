@@ -25,7 +25,7 @@ def plot_cobweb(base, P, S, D, Sfun, Dfun, fname, n_colors):
     color_map_gen = color_map_generator(n_colors, repeat=2)
     colors = [color_map_gen.next() for _ in range(len(pbase_diff))]
     plt.quiver(pbase[:-1], pvals[:-1], pbase_diff, pvals_diff, color=colors, scale_units='xy', angles='xy', scale=1)
-    linebase = np.arange(Pmin-border, Pmax+border, 0.5)
+    linebase = np.arange(Pmin-border, Pmax+border, (Pmax-Pmin)/20)
     plt.plot(linebase, [Sfun(x) for x in linebase], label='S')
     plt.plot(linebase, [Dfun(x) for x in linebase], label='D')
     plt.legend(loc='upper right',prop={'size':12})

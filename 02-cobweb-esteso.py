@@ -18,7 +18,7 @@ def cobweb_ext(d0, a, s0, b, p0, p1, r, steps):
 
     return range(steps+1), P, S, D, Sfun, Dfun
 
-base, P, S, D, Sfun, Dfun = cobweb_ext(200,0.15, 150,0.08, 500, 490, 0.1, 10)
+base, P, S, D, Sfun, Dfun = cobweb_ext(200,0.15, 150,0.07, 500, 490, 0.3, 10)
 plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-ext-stable', 10)
 
 # base, P, S, D, Sfun, Dfun = cobweb(100,0.05, 10,0.05, 950,15)
