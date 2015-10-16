@@ -18,13 +18,29 @@ def cobweb_ext(d0, a, s0, b, p0, p1, r, steps):
 
     return range(steps+1), P, S, D, Sfun, Dfun
 
-base, P, S, D, Sfun, Dfun = cobweb_ext(200,0.15, 150,0.07, 500, 490, 0.3, 10)
+def check_stability(a,b,r):
+    r_cond_1 = 0.5 * ((a/b)-1)
+    r_cond_2 = abs(r) * b/a
+    chk1 = r<r_cond_1
+    chk2 = r_cond_2<1
+    print "Check stabilita: a=%s, b=%s, rho=%s" % (a,b,r)
+    print " : %s < %s: %s" % (r, r_cond_1, chk1)
+    print " : %s < 1: %s "% (r_cond_2, chk2)
+    print "Stabile: %s" % (chk1 and chk2)
+
+d0, a, s0, b, p0, p1, r = 200, 0.15, 120, 0.07, 500, 490, 0.2
+base, P, S, D, Sfun, Dfun = cobweb_ext(d0, a, s0, b, p0, p1, r, 10)
 plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-ext-stable', 10)
+check_stability(a,b,r)
 
-# base, P, S, D, Sfun, Dfun = cobweb(100,0.05, 10,0.05, 950,15)
-# plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-pendolum', 8)
-#
-# base, P, S, D, Sfun, Dfun = cobweb(100,0.09, 50,0.1, 300,15)
-# plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-divergent', 30)
+d0, a, s0, b, p0, p1, r = 200, 0.15, 120, 0.07, 500, 490, 0.7
+base, P, S, D, Sfun, Dfun = cobweb_ext(d0, a, s0, b, p0, p1, r, 10)
+plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-ext-inst-rho', 10)
+check_stability(a,b,r)
 
-plt.show()
+d0, a, s0, b, p0, p1, r = 200, 0.15, 120, 0.07, 500, 490, 0.
+base, P, S, D, Sfun, Dfun = cobweb_ext(d0, a, s0, b, p0, p1, r, 10)
+plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-ext-inst-rhozero', 10)
+check_stability(a,b,r)
+
+#plt.show()

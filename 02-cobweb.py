@@ -25,5 +25,5 @@ plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-pendolum', 2)
 base, P, S, D, Sfun, Dfun = cobweb(100,0.09, 50,0.1, 300,15)
 plot_cobweb(base, P, S, D, Sfun, Dfun, '02-cobweb-divergent', 15)
 
-plt.show()
+#plt.show()
 

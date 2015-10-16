@@ -34,6 +34,7 @@ def y64(n):
 n_max = 50
 plot_32 = [abs(y32(x)) for x in range(n_max)]
 plot_64 = [abs(y64(x)) for x in range(n_max)]
+plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
 plt.plot(range(n_max), plot_32, 'ro', color='blue', label='float32')
 plt.plot(range(n_max), plot_64, 'rx', color='red', label='float64')
 plt.yscale('log')
@@ -41,5 +42,5 @@ plt.grid(**GRID_OPTIONS)
 plt.legend(loc='upper center')
 plt.xlabel('n')
 plt.ylabel('$\log_{10} |y_n|$')
-plt.savefig('./figs/02-fibonacci.eps', dpi=1200)
+plt.savefig('./figs/02-fibonacci.eps', dpi=SAVE_FIG_DPI)
 # plt.show()

@@ -2,7 +2,7 @@ from env import *
 from itertools import chain
 
 def plot_cobweb(base, P, S, D, Sfun, Dfun, fname, n_colors):
-    plt.figure()
+    plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
     plt.plot(base, P, label='P')
     plt.ylabel('Prezzo')
     plt.legend(loc='lower right',prop={'size':12})
@@ -14,8 +14,8 @@ def plot_cobweb(base, P, S, D, Sfun, Dfun, fname, n_colors):
     plt.ylabel('Domanda/Offerta')
     plt.xlabel('Iterazione')
     plt.grid(**GRID_OPTIONS_TWIN)
-    plt.savefig('./figs/%s-time.eps'%fname, dpi=1200)
-    plt.figure()
+    plt.savefig('./figs/%s-time.eps'%fname, dpi=SAVE_FIG_DPI)
+    plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
     pbase = list(chain(*zip(P,P[:-1])))
     pvals = list(chain(*zip(D,S[1:])))
     pbase_diff = np.diff(np.array(pbase))
@@ -32,4 +32,4 @@ def plot_cobweb(base, P, S, D, Sfun, Dfun, fname, n_colors):
     plt.xlabel('Prezzo')
     plt.ylabel('Domanda/Offerta')
     plt.grid(**GRID_OPTIONS)
-    plt.savefig('./figs/%s.eps'%fname, dpi=1200)
+    plt.savefig('./figs/%s.eps'%fname, dpi=SAVE_FIG_DPI)
