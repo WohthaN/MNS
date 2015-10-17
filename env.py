@@ -25,7 +25,7 @@ def float_format(x):
     return "%.100g" % x
 
 def plot_marker_generator():
-    markers = [',','.','1','2','3','4','_','x','|','+']
+    markers = [',','x','+','1','2','3','4','_','|','.']
     #filled markers , '8','>','<','^','v','o','d','D','h','H','*','p','s'  ]
     lmarkers = len(markers)
     c = 0
