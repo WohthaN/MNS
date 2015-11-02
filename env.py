@@ -5,6 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import matplotlib.ticker as mpl_ticker
+np.set_printoptions(precision=100)
 
 
 from math import *
