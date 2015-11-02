@@ -12,7 +12,7 @@ def nazione(a, r, g, y0, y1, steps):
         Y.append(cn+invn+g)
 
     y_eq = g/(1-a)
-    return range(steps+2), Y, I, C, y_eq
+    return list(range(steps+2)), Y, I, C, y_eq
 
 def plot_nazione(base,Y,I,C,y_eq,g,label,params):
     plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)

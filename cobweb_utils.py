@@ -16,14 +16,14 @@ def plot_cobweb(base, P, S, D, Sfun, Dfun, fname, n_colors):
     plt.grid(**GRID_OPTIONS_TWIN)
     plt.savefig('./figs/%s-time.eps'%fname, dpi=SAVE_FIG_DPI)
     plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
-    pbase = list(chain(*zip(P,P[:-1])))
-    pvals = list(chain(*zip(D,S[1:])))
+    pbase = list(chain(*list(zip(P,P[:-1]))))
+    pvals = list(chain(*list(zip(D,S[1:]))))
     pbase_diff = np.diff(np.array(pbase))
     pvals_diff = np.diff(np.array(pvals))
     Pmin, Pmax = min(P), max(P)
     border = Pmax*0.1
     color_map_gen = color_map_generator(n_colors, repeat=2)
-    colors = [color_map_gen.next() for _ in range(len(pbase_diff))]
+    colors = [next(color_map_gen) for _ in range(len(pbase_diff))]
     plt.quiver(pbase[:-1], pvals[:-1], pbase_diff, pvals_diff, color=colors, scale_units='xy', angles='xy', scale=1)
     linebase = np.arange(Pmin-border, Pmax+border, (Pmax-Pmin)/20)
     plt.plot(linebase, [Sfun(x) for x in linebase], label='S')
