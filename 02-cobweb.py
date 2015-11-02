@@ -2,7 +2,7 @@ from env import *
 from cobweb_utils import plot_cobweb
 
 def cobweb(d0, a, s0, b, p0, steps):
-    base = list(range(steps+1))
+    base = range(steps+1)
     d0ms0 = d0-s0
     Sfun = lambda x: b*x+s0
     Dfun = lambda x: -a*x+d0
