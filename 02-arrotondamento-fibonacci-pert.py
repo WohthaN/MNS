@@ -1,7 +1,7 @@
 from env import *
 from bigfloat import sqrt, precision
 
-z1 = (1+np.sqrt(np.float64(5)))/2
+z1 = (1+np.sqrt(np.float64(5)))/2 + 2e-15
 z2 = (1-np.sqrt(np.float64(5)))/2
 c0 = np.float64(1.)
 c1 = (1-np.sqrt(np.float64(5)))/2
@@ -56,5 +56,5 @@ plt.grid(**GRID_OPTIONS)
 plt.legend(loc='upper center')
 plt.xlabel('n')
 plt.ylabel('$\log_{10} |y_n|$')
-plt.savefig('./figs/02-fibonacci.eps', dpi=SAVE_FIG_DPI)
-#plt.show()
+plt.savefig('./figs/02-fibonacci-pert.eps', dpi=SAVE_FIG_DPI)
+plt.show()
