@@ -17,6 +17,7 @@ def plot(MIN, MAX, h):
     plt.legend(loc='lower left')
     plt.xlabel('t - h='+str(h))
     plt.ylabel('y')
+    plt.grid(**GRID_OPTIONS)
     plt.savefig('./figs/03-midpoint-example-MIN=%s-MAX=%s-h=%s.eps' % (MIN, MAX, h), dpi=SAVE_FIG_DPI)
 
 plot(0, 2.5, 0.02)
