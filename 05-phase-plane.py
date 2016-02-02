@@ -38,7 +38,8 @@ def add_f_to_l_not_semisimple(xrange, yrange, trange, x, y, x0, y0):
     xv = x(x0,t)
     yv = y(y0,x0,t)
     for s in range(len(t)-1):
-        plt.plot([xv[s],xv[s+1]],[yv[s],yv[s+1]],color=cg.next(),linewidth=1)
+        if abs(xv[s+1]) <= abs(xrange[0]) and abs(yv[s+1]) <= abs(yrange[0]):
+            plt.plot([xv[s],xv[s+1]],[yv[s],yv[s+1]],color=cg.next(),linewidth=1)
 
 #Caso 1: l1 != l2
 #l1,l2 < 0: stabile
@@ -112,27 +113,45 @@ def add_f_to_l_not_semisimple(xrange, yrange, trange, x, y, x0, y0):
 # plt.title('$\lambda>0$ semisemplice')
 
 
-def l_not_semisimple_quiver(xrange, yrange, x, y):
+def l_not_semisimple_quiver(xrange, yrange, dx, dy):
+    bx = np.linspace(*xrange)
+    by = np.linspace(*yrange)
+    Bx, By = np.meshgrid(bx,by)
+    Bxp = np.array([dx(bx) for _ in range(xrange[2])])
+    Byp = np.array([dy(bx,t) for t in by])
+    # Bxp, Byp = np.meshgrid(dx(bx),dy(bx,by))
+    plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
+    plt.grid(**GRID_OPTIONS)
+    plt.ylabel('$\gamma_2(t)$')
+    plt.xlabel('$\gamma_1(t)$')
+    plt.quiver(Bx,By,Bxp,Byp, width=0.001, scale_units='xy', pivot='tip', angles='xy', color='grey')
+    plt.grid(**GRID_OPTIONS)
     pass
 
-# l < 0
+## l < 0
 # l_not_semisimple_basic_plot()
-# l = -0.1
+# l = -0.6
 # x = lambda x0,t: x0*np.exp(l*t)
 # y = lambda y0,x0,t: (y0+x0*t)*np.exp(l*t)
-# for sx in np.linspace(-5,5,6):
-#     for sy in np.linspace(-5,5,6):
-#         add_f_to_l_not_semisimple(xrange, yrange, [0, 30, 100], x, y, sx, sy)
+# dx = lambda tx: l*tx
+# dy = lambda tx,ty: l*ty+tx
+# l_not_semisimple_quiver([-6,6,25],[-6,6,25],dx,dy)
+# for sx in np.linspace(-5,5,3):
+#     for sy in np.linspace(-5,5,3):
+#         add_f_to_l_not_semisimple(xrange, yrange, [0, 10, 100], x, y, sx, sy)
 # plt.title('$\lambda<0$ non semisemplice')
 
-# l > 0
-l_not_semisimple_basic_plot()
-l = 0.1
+## l > 0
+l = 0.6
 x = lambda x0,t: x0*np.exp(l*t)
 y = lambda y0,x0,t: (y0+x0*t)*np.exp(l*t)
-for sx in np.linspace(-0.1,0.1,6):
-    for sy in np.linspace(-0.1,0.1,6):
+dx = lambda tx: l*tx
+dy = lambda tx,ty: l*ty+tx
+l_not_semisimple_quiver([-6,6,50],[-6,6,50],dx,dy)
+for sx in np.linspace(-0.015,0.015,2):
+    for sy in np.linspace(-0.16,0.16,8):
         add_f_to_l_not_semisimple(xrange, yrange, [0, 10, 100], x, y, sx, sy)
+# add_f_to_l_not_semisimple(xrange, yrange, [0, 10, 100], x, y, 0.01, -0.1)
 plt.title('$\lambda<0$ non semisemplice')
 
 ##Caso 3: complessi coniugati
