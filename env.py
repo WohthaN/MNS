@@ -36,7 +36,9 @@ def plot_marker_generator():
 
 def color_map_generator(N, repeat=1, cmap='spectral'):
     '''Returns a function that maps each index in 0, 1, ... N-1 to a distinct
-    RGB color.'''
+    RGB color.
+    cmap reference: http://matplotlib.org/examples/color/colormaps_reference.html
+    '''
     # cmaps:
     # -spectral
     # -prism
