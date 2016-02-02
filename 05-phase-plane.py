@@ -43,7 +43,7 @@ def add_f_to_l_not_semisimple(xrange, yrange, trange, x, y, x0, y0):
     xv = x(x0,t)
     yv = y(y0,x0,t)
     for s in range(len(t)-1):
-        if abs(xv[s+1]) <= abs(xrange[0]) and abs(yv[s+1]) <= abs(yrange[0]):
+        if abs(xv[s+1]) < abs(xrange[0]) and abs(yv[s+1]) < abs(yrange[0]):
             plt.plot([xv[s],xv[s+1]],[yv[s],yv[s+1]],color=cg.next(),linewidth=1)
 
 def l_not_real_quiver(xrange, yrange, dx, dy):
@@ -67,7 +67,7 @@ def add_f_to_l_not_real(xrange, yrange, trange, rho, theta, rho0, theta0):
     xv = r * np.cos(t)
     yv = r * np.sin(t)
     for s in range(len(t)-1):
-        if abs(xv[s+1]) <= abs(xrange[0]) and abs(yv[s+1]) <= abs(yrange[0]):
+        if abs(xv[s+1]) < abs(xrange[0]) and abs(yv[s+1]) < abs(yrange[0]):
             plt.plot([xv[s],xv[s+1]],[yv[s],yv[s+1]],color=cg.next(),linewidth=1)
 
 #Caso 1: l1 != l2
