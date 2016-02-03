@@ -52,8 +52,8 @@ def color_map_generator(N, repeat=1, cmap='spectral'):
 
 GRID_OPTIONS = {'b':True, 'which':'both', 'linestyle':':'}
 GRID_OPTIONS_TWIN = {'b':True, 'which':'both', 'linestyle':'-.'}
-FIG_SIZE_3D=(10,8)
-FIG_SIZE_2D=(6,4)
+FIG_SIZE_3D=(10,10)
+FIG_SIZE_2D=(6,6)
 FIG_DPI_3D = 300
 FIG_DPI_2D = 300
 SAVE_FIG_DPI=300
