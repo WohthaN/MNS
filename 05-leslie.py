@@ -17,6 +17,24 @@ def plot_histogram(data,m):
         ys = range(len(data))
         ax.plot_wireframe(xs, ys, d, rstride=1, cstride=1, color=cg.next(), linewidth=0.5, alpha=1)
 
+def shade_plot(data,m):
+    iy, ix = np.mgrid[0:len(data[0]),0:len(data)]
+    data = np.array(data).transpose()
+
+    cmap = plt.cm.viridis
+    ls = LightSource(-90, 60)
+    rgb = ls.shade(data, cmap, blend_mode='soft')
+
+    fig = plt.figure(figsize=FIG_SIZE_3D, dpi=FIG_DPI_3D)
+    plt.grid(**GRID_OPTIONS)
+    im = plt.imshow(rgb, aspect='auto', cmap=cmap, interpolation='bicubic',
+                    extent=[0,len(data[0]), len(data)*m,0])
+    # # Use a proxy artist for the colorbar...
+    # im = ax.imshow(data, cmap=cmap)
+    # im.remove()
+    cbar= fig.colorbar(im, ticks=[rgb.min(), (rgb.max()-rgb.min())/2, rgb.max()])
+    cbar.ax.set_yticklabels([data.min(),(data.max()-data.min())/2,data.max()])
+    # ax.set_title('Using a colorbar with a shaded plot', size='x-large')
 
 # def plot_histogram(data,m):
 #     data=np.array(data)
@@ -79,6 +97,7 @@ alphas = [0.,
 
 x = np.ones((L/m))*10e6
 
-r = leslie(L,m,alphas,betas,x,300)
-plot_histogram(r,m)
+r = leslie(L,m,alphas,betas,x,200)
+# plot_histogram(r,m)
+shade_plot(r,m)
 plt.show()

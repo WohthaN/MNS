@@ -1,6 +1,7 @@
 import numpy as np
 #import scipy as sp
 import matplotlib as mpl
+from matplotlib.colors import LightSource, Normalize
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
