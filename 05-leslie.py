@@ -7,6 +7,7 @@ def plot_histogram(data, t, zlog=True):
     ax = fig.add_subplot(111, projection='3d')
     if zlog:
         ax.set_zscale('log')
+        data = np.log(np.array(data))
 
     for i,d in enumerate(data):
         xs = range(0, len(d) * t, t)
@@ -21,25 +22,27 @@ def plot_histogram(data, t, zlog=True):
 
     ax.view_init(elev=45, azim=45)
 
+
 def plot_shade(data, t, zlog=True):
     if zlog:
         norm=mpl.colors.LogNorm()
     else:
-        norm=mpl.colors.NoNorm()
+        norm=None
+
     data = np.array(data).transpose()
     cmap = plt.cm.viridis
     fig = plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
     plt.grid(**GRID_OPTIONS)
     im = plt.imshow(data, aspect='auto', cmap=cmap, interpolation='bicubic',
-                    extent=[0, len(data[0]), len(data) * t, 0], norm=mpl.colors.LogNorm())
+                    extent=[0, len(data[0]), len(data) * t, 0], norm=norm)
     cbar = fig.colorbar(im)
 
     #Shaded plot is nicer to the eye
     im.remove()
     ls = LightSource(-90, 60)
-    rgb = ls.shade(data, cmap, blend_mode='soft',norm=mpl.colors.LogNorm())
+    rgb = ls.shade(data, cmap, blend_mode='soft',norm=norm)
     plt.imshow(rgb, aspect='auto', cmap=cmap, interpolation='bicubic',
-               extent=[0, len(data[0])*t, len(data) * t, 0], norm=mpl.colors.LogNorm())
+               extent=[0, len(data[0])*t, len(data) * t, 0], norm=norm)
 
 def plot_rates(alphas, betas, t, name):
     barwidth = t/2.5
@@ -53,19 +56,20 @@ def plot_rates(alphas, betas, t, name):
             width=barwidth, linewidth=0)
     plt.ylabel('Survival')
 
-def plot_and_save(L,m,alphas,betas,x,name,zlog=True,iterations=150):
+def plot_and_save(L,m,alphas,betas,x,name,zlog=False,iterations=150):
     print "Computing %s" % name
+    savename = name.replace(' ', '_')
     t = L/m
     plot_rates(alphas, betas, t, name)
     plt.title(name)
-    #plt.savefig('./figs/05-leslie-d-%s.eps' %name, dpi=SAVE_FIG_DPI)
+    plt.savefig('./figs/05-leslie-d-%s.eps' %savename, dpi=SAVE_FIG_DPI)
     r = leslie(L,m,alphas,betas,x,iterations)
     plot_histogram(r,t,zlog)
     plt.title(name)
-    #plt.savefig('./figs/05-leslie-h-%s.eps' %name, dpi=SAVE_FIG_DPI)
+    plt.savefig('./figs/05-leslie-h-%s.eps' %savename, dpi=SAVE_FIG_DPI)
     plot_shade(r, t, zlog)
     plt.title(name)
-    #plt.savefig('./figs/05-leslie-s-%s.eps'%name, dpi=SAVE_FIG_DPI)
+    plt.savefig('./figs/05-leslie-s-%s.eps'%savename, dpi=SAVE_FIG_DPI)
 
 def leslie(L,m,alphas, betas, x, tsteps):
     res = [x]
@@ -82,31 +86,33 @@ def leslie(L,m,alphas, betas, x, tsteps):
 #Mortality rates for 2007 USA from http://www.cdc.gov/nchs/nvss/mortality/gmwk23r.htm
 # centers for disease control and prevention
 # scale: 100000
-human_mortality_base = 2.5 * 10e6
-human_mortality_rates = np.array([[0,1, 29138.],
-                                 [1,5, 4703.],
-                                 [5,15, 6147.],
-                                 [15,25, 33982.],
-                                 [25,35, 42572.],
-                                 [35,45, 79606.],
-                                 [45,55, 184686.],
-                                 [55,65, 287110.],
-                                 [65,75, 389238.],
-                                 [75,85, 652682.],
-                                 [85,100, 713647.],])
+human_mortality_base = 1e5
+human_mortality_rates = np.array([[0,1, 684.],
+                                 [1,5, 29.],
+                                 [5,15, 15.3],
+                                 [15,25, 79.9],
+                                 [25,35, 104.9],
+                                 [35,45, 184.4],
+                                 [45,55, 420.9],
+                                 [55,65, 877.7],
+                                 [65,75, 2011.3],
+                                 [75,85, 5011.6],
+                                 [85,100, 12946.5],])
 human_mortality_rates[:,2] /= human_mortality_base
 
 #Birth rates for 2013 USA  http://www.cdc.gov/nchs/births.htm
-human_birth_base = 2*3.9*10e6
+#http://www.cdc.gov/nchs/data/nvsr/nvsr64/nvsr64_01.pdf
+#Normalized on female population per age group
+human_birth_base = 0.5
 human_birth_rates = np.array([[0,10,0],
-                             [10,15,3098.],
-                             [15,19,273105.],
-                             [19,25,896745.],
-                             [25,30,1120777.],
-                             [30,35,1036927.],
-                             [35,40,483873.],
-                             [40,45,109484.],
-                             [45,55,8000.],
+                             [10,15,3098./5e6],
+                             [15,19,273105./10e6],
+                             [19,25,896745./11e6],
+                             [25,30,1120777./10.6e6],
+                             [30,35,1036927./10.6e6],
+                             [35,40,483873./9.8e6],
+                             [40,45,109484./10.5e6],
+                             [45,55,8000./10.7e6],
                              [55,100,0],])
 human_birth_rates[:,2] /= human_birth_base
 
@@ -130,7 +136,7 @@ def rescale_distribution(base_distrib, n_bins):
 
 
 #Human models. We assume Lifespan is 0-100 (bound to the distribution limits)
-total_human_population = 50*10e6
+total_human_population = 320*10e6
 L = 100
 
 #Realistic 1y/group
@@ -138,46 +144,48 @@ m = 100
 betas = 1-rescale_distribution(human_mortality_rates,m)
 alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-# plot_and_save(L,m,alphas,betas,x,'Realistic 1y/group',iterations=200)
+plot_and_save(L,m,alphas,betas,x,'Realistic 1y group',iterations=250)
 
 #Realistic 5y/group
 m = 20
 betas = 1-rescale_distribution(human_mortality_rates,m)
 alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-# plot_and_save(L,m,alphas,betas,x,'Realistic 5y/group',iterations=50)
+plot_and_save(L,m,alphas,betas,x,'Realistic 5y group',iterations=50)
 
 #Realistic 10y/group
 m = 10
 betas = 1-rescale_distribution(human_mortality_rates,m)
 alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-# plot_and_save(L,m,alphas,betas,x,'Realistic 10y/group',iterations=25)
+plot_and_save(L,m,alphas,betas,x,'Realistic 10y group',iterations=25)
 
 #Realistic 5y/group with enough births
 m = 20
 betas = 1-rescale_distribution(human_mortality_rates,m)
-alphas = rescale_distribution(human_birth_rates,m)*3.8
+alphas = rescale_distribution(human_birth_rates,m)*4
 x = np.ones(m)*total_human_population/m
-# plot_and_save(L,m,alphas,betas,x,'5y/group with enough births',iterations=100)
+plot_and_save(L,m,alphas,betas,x,'5y group with more births',iterations=50)
 
 
 #Ostrowski examples
-L = 8
+L = 4
 m = 4
 betas = np.array([0.5]*4)
-alphas_1 = np.array([0,2,2,0])
-alphas_2 = np.array([0,0,2,2])
+alphas_1 = np.array([0,1.5,1.5,0])
+alphas_2 = np.array([0,0,1.5,1.5])
 x = np.ones(m)*10e3
-plot_and_save(L,m,alphas_1,betas,x,'Ow1', iterations=100)
-plot_and_save(L,m,alphas_2,betas,x,'Ow2', iterations=100)
+plot_and_save(L,m,alphas_1,betas,x,'Ostrowski 1', iterations=100)
+x = np.ones(m)*10e6
+plot_and_save(L,m,alphas_2,betas,x,'Ostrowski 2', iterations=100)
 
 
 #population wave example
-L=10
-m=10
-betas = np.array([0.8]*10)
-alphas = np.array([0]*9+[5.])
+L=4
+m=4
+betas = np.array([0.5]*4)
+alphas = np.array([0,0,0,5.])
 x=np.ones(m)*10e3
-# plot_and_save(L,m,alphas,betas,x,'Population wave example', iterations=100)
-plt.show()
+plot_and_save(L,m,alphas,betas,x,'Population wave example', iterations=100)
+
+# plt.show()
