@@ -1,7 +1,7 @@
 from env import *
 
 def plot_histogram(data, t, zlog=True):
-    cg = color_map_generator(len(data), repeat=1, cmap='plasma')
+    cg = color_map_generator(len(data), repeat=1, cmap='inferno')
     fig = plt.figure(figsize=FIG_SIZE_3D, dpi=FIG_DPI_3D)
     plt.grid(**GRID_OPTIONS)
     ax = fig.add_subplot(111, projection='3d')
@@ -13,7 +13,7 @@ def plot_histogram(data, t, zlog=True):
         ys = [i*t]
         ax.plot_wireframe(xs, ys, d, rstride=1, cstride=0, color=cg.next(), linewidth=0.5)
 
-    cg = color_map_generator(len(data[0]), repeat=1, cmap='copper')
+    cg = color_map_generator(len(data[0]), repeat=1, cmap='cool')
     for i,d in enumerate(np.array(data).transpose()):
         xs = [t * i]
         ys = np.arange(len(data))*t
@@ -48,13 +48,13 @@ def plot_rates(alphas, betas, t, name):
     plt.bar(np.arange(0, t * (len(alphas)), t)+barwidth, alphas, color='red', align='center',
             width=barwidth, linewidth=0)
     plt.ylabel('Birthrate')
-    print np.arange(0, t * (len(alphas)), t)
     plt.twinx()
     plt.bar(np.arange(t, t * len(betas) + 1, t), betas, color='green', align='center',
             width=barwidth, linewidth=0)
     plt.ylabel('Survival')
 
 def plot_and_save(L,m,alphas,betas,x,name,zlog=True,iterations=150):
+    print "Computing %s" % name
     t = L/m
     plot_rates(alphas, betas, t, name)
     plt.title(name)
@@ -82,30 +82,33 @@ def leslie(L,m,alphas, betas, x, tsteps):
 #Mortality rates for 2007 USA from http://www.cdc.gov/nchs/nvss/mortality/gmwk23r.htm
 # centers for disease control and prevention
 # scale: 100000
-# 0-1: 684.5
-# 1-4: 28.6
-# 5-14: 15.3
-# 15-24: 79.9
-# 25-34: 104.9
-# 35-44: 184.4
-# 45-54: 420.9
-# 55-64: 877.7
-# 65-74: 2011.3
-# 75-84: 5011.6
-# 85-100: 12.946.5
+human_mortality_base = 2.5 * 10e6
+human_mortality_rates = np.array([[0,1, 29138.],
+                                 [1,5, 4703.],
+                                 [5,15, 6147.],
+                                 [15,25, 33982.],
+                                 [25,35, 42572.],
+                                 [35,45, 79606.],
+                                 [45,55, 184686.],
+                                 [55,65, 287110.],
+                                 [65,75, 389238.],
+                                 [75,85, 652682.],
+                                 [85,100, 713647.],])
+human_mortality_rates[:,2] /= human_mortality_base
 
-#Birth rates for 2013 USA http://www.childtrends.org/wp-content/uploads/2014/07/79_fig2.jpg
-# scale 1000 (beware: women only!)
-# [[0,10,0],
-# [10,15,0.3],
-# [15,19,26.5],
-# [19,25,80.7],
-# [25,30,105.5],
-# [30,35,98.0],
-# [35,40,49.3],
-# [40,45,10.4],
-# [45,55,0.8],
-# [55,200,0],]
+#Birth rates for 2013 USA  http://www.cdc.gov/nchs/births.htm
+human_birth_base = 2*3.9*10e6
+human_birth_rates = np.array([[0,10,0],
+                             [10,15,3098.],
+                             [15,19,273105.],
+                             [19,25,896745.],
+                             [25,30,1120777.],
+                             [30,35,1036927.],
+                             [35,40,483873.],
+                             [40,45,109484.],
+                             [45,55,8000.],
+                             [55,100,0],])
+human_birth_rates[:,2] /= human_birth_base
 
 
 def rescale_distribution(base_distrib, n_bins):
@@ -113,116 +116,56 @@ def rescale_distribution(base_distrib, n_bins):
     # rescale the distribution to be represented with a different
     # number of bins, in such a way that the integral of the
     # distribution remains unchanged.
+    intg = sum((base_distrib[:,1]-base_distrib[:,0])*base_distrib[:,2])
+    samples = list()
+    for bin in base_distrib:
+        for b in np.arange(bin[0],bin[1]):
+            samples.append((b,bin[2]))
+    samples = np.array(samples)
+    base = np.arange(0,100,100/n_bins)
+    interp = sp.interp(base, samples[:,0], samples[:,1])
+    interp *= intg/sum(interp)
+    return interp
 
-def get_survival_rate(ymin,ymax):
-    #compute average survivale rate for age range
-    mortality = [[0,1, 684.5],
-                 [1,5, 28.6],
-                 [5,15, 15.3],
-                 [15,25, 79.9],
-                 [25,35, 104.9],
-                 [35,45, 184.4],
-                 [45,55, 420.9],
-                 [55,65, 877.7],
-                 [65,75, 2011.3],
-                 [75,85, 5011.6],
-                 [85,101, 12946.5],]
-    mscale = 100000
-    mrate = 0
-    for y in range(ymin, ymax):
-        for rg in mortality:
-           if y >= rg[0] and y < rg[1]:
-                mrate += rg[2]
-    mrate = mrate / (ymax-ymin)
-    return 1. - (mrate / mscale)
 
-def get_birth_rate(ymin,ymax):
-    #compute average birthrate for age range
-    births = [[0,10,0],
-             [10,15,0.3],
-             [15,19,26.5],
-             [19,25,80.7],
-             [25,30,105.5],
-             [30,35,98.0],
-             [35,40,49.3],
-             [40,45,10.4],
-             [45,55,0.8],
-             [55,101,0],]
-    bscale = 2*1000 #assuming it taske one womand and one man to make a child
-    brate = 0
-    for y in range(ymin, ymax):
-        for rg in births:
-           if y >= rg[0] and y < rg[1]:
-                brate += rg[2]
-    brate = brate / (ymax-ymin)
-    return brate / bscale
 
+#Human models. We assume Lifespan is 0-100 (bound to the distribution limits)
 total_human_population = 50*10e6
+L = 100
 
 #Realistic 1y/group
-L = 100
 m = 100
-t = L/m
-betas = [get_survival_rate(x,x+t) for x in np.arange(t, L, t)]
-alphas = [get_birth_rate(x,x+t) for x in np.arange(0, L, t)]
-print betas, len(betas)
-print alphas, len(alphas)
-assert len(alphas) == m
+betas = 1-rescale_distribution(human_mortality_rates,m)
+alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-plot_and_save(L,m,alphas,betas,x,'Realistic 1y/group',iterations=500)
+# plot_and_save(L,m,alphas,betas,x,'Realistic 1y/group',iterations=200)
 
 #Realistic 5y/group
-L = 100
 m = 20
-t = L/m
-betas = [get_survival_rate(x,x+t) for x in np.arange(t, L, t)]
-alphas = [get_birth_rate(x,x+t) for x in np.arange(0, L, t)]
-print betas, len(betas)
-print alphas, len(alphas)
-assert len(alphas) == m
+betas = 1-rescale_distribution(human_mortality_rates,m)
+alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-plot_and_save(L,m,alphas,betas,x,'Realistic 5y/group',iterations=100)
-
+# plot_and_save(L,m,alphas,betas,x,'Realistic 5y/group',iterations=50)
 
 #Realistic 10y/group
-L = 100
 m = 10
-t = L/m
-betas = [get_survival_rate(x,x+t) for x in np.arange(t, L, t)]
-alphas = [get_birth_rate(x,x+t) for x in np.arange(0, L, t)]
-print betas, len(betas)
-print alphas, len(alphas)
-assert len(alphas) == m
+betas = 1-rescale_distribution(human_mortality_rates,m)
+alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-plot_and_save(L,m,alphas,betas,x,'Realistic 10y/group',iterations=50)
+# plot_and_save(L,m,alphas,betas,x,'Realistic 10y/group',iterations=25)
 
-#Bir
-# L = 100
-# m = 10
-#
-# betas = [0.99999,
-#         0.99999,
-#         0.9999,
-#         0.9990,
-#         0.9950,
-#
-#         0.990,
-#         0.85,
-#         0.65,
-#         0.5
-#         ]
-#
-# alphas = [0.,
-#         0./1000,
-#         0./5,
-#         0./1,
-#         0./5,
-#
-#         0./1000,
-#         0.,
-#         0.,
-#         0.,
-#         2.5]
-# x = np.ones((L/m))*10e6
-# plot_and_save(L,m,alphas,betas,x,'bla')
+#Realistic 5y/group with enough births
+m = 20
+betas = 1-rescale_distribution(human_mortality_rates,m)
+alphas = rescale_distribution(human_birth_rates,m)*3.8
+x = np.ones(m)*total_human_population/m
+# plot_and_save(L,m,alphas,betas,x,'5y/group with enough births',iterations=100)
+
+#population wave example
+L=10
+m=10
+betas = np.array([0.8]*10)
+alphas = np.array([0]*9+[5.])
+x=np.ones(m)*10e3
+# plot_and_save(L,m,alphas,betas,x,'Population wave example', iterations=100)
 plt.show()

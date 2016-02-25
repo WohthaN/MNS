@@ -1,5 +1,5 @@
 import numpy as np
-#import scipy as sp
+import scipy as sp
 import matplotlib as mpl
 from matplotlib.colors import LightSource, Normalize
 from mpl_toolkits.mplot3d import Axes3D
