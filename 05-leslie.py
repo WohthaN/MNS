@@ -21,6 +21,8 @@ def plot_histogram(data, t, zlog=True):
         ax.plot_wireframe(xs, ys, d, rstride=1, cstride=1, color=cg.next(), linewidth=0.5, alpha=1)
 
     ax.view_init(elev=45, azim=45)
+    plt.xlabel('Bin')
+    plt.ylabel('Time')
 
 
 def plot_shade(data, t, zlog=True):
@@ -43,6 +45,8 @@ def plot_shade(data, t, zlog=True):
     rgb = ls.shade(data, cmap, blend_mode='soft',norm=norm)
     plt.imshow(rgb, aspect='auto', cmap=cmap, interpolation='bicubic',
                extent=[0, len(data[0])*t, len(data) * t, 0], norm=norm)
+    plt.xlabel('Time')
+    plt.ylabel('Bin')
 
 def plot_rates(alphas, betas, t, name):
     barwidth = t/2.5
@@ -84,6 +88,7 @@ def leslie(L,m,alphas, betas, x, tsteps):
     return res
 
 #Mortality rates for 2007 USA from http://www.cdc.gov/nchs/nvss/mortality/gmwk23r.htm
+#http://www.cdc.gov/nchs/data/dvs/mortfinal2007_worktable23r.pdf
 # centers for disease control and prevention
 # scale: 100000
 human_mortality_base = 1e5
@@ -103,16 +108,16 @@ human_mortality_rates[:,2] /= human_mortality_base
 #Birth rates for 2013 USA  http://www.cdc.gov/nchs/births.htm
 #http://www.cdc.gov/nchs/data/nvsr/nvsr64/nvsr64_01.pdf
 #Normalized on female population per age group
-human_birth_base = 0.5
+human_birth_base = 2000
 human_birth_rates = np.array([[0,10,0],
-                             [10,15,3098./5e6],
-                             [15,19,273105./10e6],
-                             [19,25,896745./11e6],
-                             [25,30,1120777./10.6e6],
-                             [30,35,1036927./10.6e6],
-                             [35,40,483873./9.8e6],
-                             [40,45,109484./10.5e6],
-                             [45,55,8000./10.7e6],
+                             [10,15,0.3],
+                             [15,19,26.5],
+                             [19,25,80.7],
+                             [25,30,105.5],
+                             [30,35,98.],
+                             [35,40,49.3],
+                             [40,45,10.4],
+                             [45,55,0.5],
                              [55,100,0],])
 human_birth_rates[:,2] /= human_birth_base
 
@@ -120,8 +125,8 @@ human_birth_rates[:,2] /= human_birth_base
 def rescale_distribution(base_distrib, n_bins):
     # Given a histrogram distribution with non-uniform bins,
     # rescale the distribution to be represented with a different
-    # number of bins, in such a way that the integral of the
-    # distribution remains unchanged.
+    # number of bins and normalize it to have unitary integral.
+    # Normalize the distribution.
     intg = sum((base_distrib[:,1]-base_distrib[:,0])*base_distrib[:,2])
     samples = list()
     for bin in base_distrib:
@@ -130,7 +135,7 @@ def rescale_distribution(base_distrib, n_bins):
     samples = np.array(samples)
     base = np.arange(0,100,100/n_bins)
     interp = sp.interp(base, samples[:,0], samples[:,1])
-    interp *= intg/sum(interp)
+    interp *= 1/(sum(interp))
     return interp
 
 
@@ -144,29 +149,21 @@ m = 100
 betas = 1-rescale_distribution(human_mortality_rates,m)
 alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-plot_and_save(L,m,alphas,betas,x,'Realistic 1y group',iterations=250)
+plot_and_save(L,m,alphas,betas,x,'Realistic 1y group',iterations=100)
 
 #Realistic 5y/group
 m = 20
 betas = 1-rescale_distribution(human_mortality_rates,m)
 alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-plot_and_save(L,m,alphas,betas,x,'Realistic 5y group',iterations=50)
+plot_and_save(L,m,alphas,betas,x,'Realistic 5y group',iterations=20)
 
 #Realistic 10y/group
 m = 10
 betas = 1-rescale_distribution(human_mortality_rates,m)
 alphas = rescale_distribution(human_birth_rates,m)
 x = np.ones(m)*total_human_population/m
-plot_and_save(L,m,alphas,betas,x,'Realistic 10y group',iterations=25)
-
-#Realistic 5y/group with enough births
-m = 20
-betas = 1-rescale_distribution(human_mortality_rates,m)
-alphas = rescale_distribution(human_birth_rates,m)*4
-x = np.ones(m)*total_human_population/m
-plot_and_save(L,m,alphas,betas,x,'5y group with more births',iterations=50)
-
+plot_and_save(L,m,alphas,betas,x,'Realistic 10y group',iterations=10)
 
 #Ostrowski examples
 L = 4
@@ -174,10 +171,10 @@ m = 4
 betas = np.array([0.5]*4)
 alphas_1 = np.array([0,1.5,1.5,0])
 alphas_2 = np.array([0,0,1.5,1.5])
-x = np.ones(m)*10e3
-plot_and_save(L,m,alphas_1,betas,x,'Ostrowski 1', iterations=100)
-x = np.ones(m)*10e6
-plot_and_save(L,m,alphas_2,betas,x,'Ostrowski 2', iterations=100)
+x = np.ones(m)*10e2
+plot_and_save(L,m,alphas_1,betas,x,'Ostrowski 1', iterations=20, zlog=True)
+x = np.ones(m)*10e8
+plot_and_save(L,m,alphas_2,betas,x,'Ostrowski 2', iterations=20, zlog=True)
 
 
 #population wave example
@@ -185,7 +182,7 @@ L=4
 m=4
 betas = np.array([0.5]*4)
 alphas = np.array([0,0,0,5.])
-x=np.ones(m)*10e3
-plot_and_save(L,m,alphas,betas,x,'Population wave example', iterations=100)
+x=np.ones(m)*10e6
+plot_and_save(L,m,alphas,betas,x,'Population wave example', iterations=20, zlog=True)
 
 # plt.show()
