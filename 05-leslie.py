@@ -172,9 +172,9 @@ betas = np.array([0.5]*4)
 alphas_1 = np.array([0,1.5,1.5,0])
 alphas_2 = np.array([0,0,1.5,1.5])
 x = np.ones(m)*10e2
-plot_and_save(L,m,alphas_1,betas,x,'Ostrowski 1', iterations=20, zlog=True)
+plot_and_save(L,m,alphas_1,betas,x,'Ostrowski 1', iterations=50, zlog=True)
 x = np.ones(m)*10e8
-plot_and_save(L,m,alphas_2,betas,x,'Ostrowski 2', iterations=20, zlog=True)
+plot_and_save(L,m,alphas_2,betas,x,'Ostrowski 2', iterations=50, zlog=True)
 
 
 #population wave example
