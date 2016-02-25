@@ -161,6 +161,18 @@ alphas = rescale_distribution(human_birth_rates,m)*3.8
 x = np.ones(m)*total_human_population/m
 # plot_and_save(L,m,alphas,betas,x,'5y/group with enough births',iterations=100)
 
+
+#Ostrowski examples
+L = 8
+m = 4
+betas = np.array([0.5]*4)
+alphas_1 = np.array([0,2,2,0])
+alphas_2 = np.array([0,0,2,2])
+x = np.ones(m)*10e3
+plot_and_save(L,m,alphas_1,betas,x,'Ow1', iterations=100)
+plot_and_save(L,m,alphas_2,betas,x,'Ow2', iterations=100)
+
+
 #population wave example
 L=10
 m=10
