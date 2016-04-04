@@ -10,15 +10,15 @@ def plot_histogram(data, t, zlog=True):
         data = np.log(np.array(data))
 
     for i,d in enumerate(data):
-        xs = range(0, len(d) * t, t)
+        xs = list(range(0, len(d) * t, t))
         ys = [i*t]
-        ax.plot_wireframe(xs, ys, d, rstride=1, cstride=0, color=cg.next(), linewidth=0.5)
+        ax.plot_wireframe(xs, ys, d, rstride=1, cstride=0, color=next(cg), linewidth=0.5)
 
     cg = color_map_generator(len(data[0]), repeat=1, cmap='cool')
     for i,d in enumerate(np.array(data).transpose()):
         xs = [t * i]
         ys = np.arange(len(data))*t
-        ax.plot_wireframe(xs, ys, d, rstride=1, cstride=1, color=cg.next(), linewidth=0.5, alpha=1)
+        ax.plot_wireframe(xs, ys, d, rstride=1, cstride=1, color=next(cg), linewidth=0.5, alpha=1)
 
     ax.view_init(elev=45, azim=45)
     plt.xlabel('Bin')
@@ -61,7 +61,7 @@ def plot_rates(alphas, betas, t, name):
     plt.ylabel('Survival')
 
 def plot_and_save(L,m,alphas,betas,x,name,zlog=False,iterations=150):
-    print "Computing %s" % name
+    print(("Computing %s" % name))
     savename = name.replace(' ', '_')
     t = L/m
     plot_rates(alphas, betas, t, name)

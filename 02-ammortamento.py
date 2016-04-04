@@ -23,7 +23,7 @@ i = 0.05
 plt.figure(0,figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
 for r in range(480,521,5):
     m = [x[0] for x in mutuo(C,i,r)]
-    plt.plot(range(len(m)), m, '-'+PLOT_MARKER.next(), label='rata %s' % (r))
+    plt.plot(list(range(len(m))), m, '-'+next(PLOT_MARKER), label='rata %s' % (r))
 plt.legend(loc='upper left',prop={'size':12})
 plt.grid(**GRID_OPTIONS)
 plt.xlabel('numero rate')
@@ -31,15 +31,15 @@ plt.ylabel('Rimanente da pagare')
 plt.savefig('./figs/02-ammortamento-rata.eps', dpi=SAVE_FIG_DPI)
 
 # al variare del numero di rate
-for N in [1] + range(10,80,10):
+for N in [1] + list(range(10,80,10)):
     r = rata_mutuo(C,i,N)
     m = [x[1] for x in mutuo(C,i,r)]
-    marker = PLOT_MARKER.next()
+    marker = next(PLOT_MARKER)
     plt.figure(1)
-    plt.plot(range(len(m)), m, '-'+marker, label='n rate %s' % (N))
+    plt.plot(list(range(len(m))), m, '-'+marker, label='n rate %s' % (N))
     plt.figure(2)
     s = np.cumsum(m)
-    plt.plot(range(len(s)), s, '-'+marker, label='n rate %s' % (N))
+    plt.plot(list(range(len(s))), s, '-'+marker, label='n rate %s' % (N))
 
 plt.figure(1,figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
 plt.legend(loc='upper right',prop={'size':12})
