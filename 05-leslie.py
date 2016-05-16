@@ -1,6 +1,7 @@
 from env import *
 
 def plot_histogram(data, t, zlog=True):
+    t = int(t)
     cg = color_map_generator(len(data), repeat=1, cmap='inferno')
     fig = plt.figure(figsize=FIG_SIZE_3D, dpi=FIG_DPI_3D)
     plt.grid(**GRID_OPTIONS)

@@ -13,7 +13,7 @@ def quivplot(xrange,yrange, dx, dy):
     plt.grid(**GRID_OPTIONS)
     plt.ylabel('$\gamma_2(t)$')
     plt.xlabel('$\gamma_1(t)$')
-    plt.quiver(Bx,By,Bxp,Byp, width=0.001, scale_units='xy', pivot='tip', angles='xy', color='grey')
+    plt.quiver(Bx,By,Bxp,Byp, width=0.002, scale_units='xy', pivot='tip', angles='xy', color='grey')
     plt.grid(**GRID_OPTIONS)
 
 def add_f_to_quivplot_case_1(xrange, yrange, trange, x, y, x0, y0):
@@ -34,7 +34,7 @@ def l_not_semisimple_quiver(xrange, yrange, dx, dy):
     plt.grid(**GRID_OPTIONS)
     plt.ylabel('$\gamma_2(t)$')
     plt.xlabel('$\gamma_1(t)$')
-    plt.quiver(Bx,By,Bxp,Byp, width=0.001, scale_units='xy', pivot='tip', angles='xy', color='grey')
+    plt.quiver(Bx,By,Bxp,Byp, width=0.002, scale_units='xy', pivot='tip', angles='xy', color='grey')
     plt.grid(**GRID_OPTIONS)
 
 def add_f_to_l_not_semisimple(xrange, yrange, trange, x, y, x0, y0):
@@ -58,7 +58,7 @@ def l_not_real_quiver(xrange, yrange, dx, dy):
     plt.grid(**GRID_OPTIONS)
     plt.ylabel('$\\theta(t)$')
     plt.xlabel('$\\rho(t)$')
-    plt.quiver(Bx,By,Bxp,Byp, width=0.001, scale_units='xy', pivot='tip', angles='xy', color='grey')
+    plt.quiver(Bx,By,Bxp,Byp, width=0.002, scale_units='xy', pivot='tip', angles='xy', color='grey')
     plt.grid(**GRID_OPTIONS)
 
 def add_f_to_l_not_real(xrange, yrange, trange, rho, theta, rho0, theta0):
