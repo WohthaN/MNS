@@ -68,6 +68,8 @@ def plot_population(data, t, name):
     fig = plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
     data = np.sum(data, axis=1)
     plt.plot([x*t for x in range(len(data))], data)
+    plt.xlabel('Time')
+    plt.ylabel('Total population')
     plt.grid(**GRID_OPTIONS)
 
 
@@ -231,6 +233,6 @@ m = 4
 betas = np.array([0.5] * 4)
 alphas = np.array([0, 0, 0, 5.])
 x = np.ones(m) * 10e6
-plot_and_save(L, m, alphas, betas, x, 'Population wave example', iterations=20, zlog=True)
+plot_and_save(L, m, alphas, betas, x, 'Population wave example', iterations=20, zlog=False)
 
 # plt.show()
