@@ -1,5 +1,5 @@
 from env import *
-
+PLOT_MARKER = plot_marker_generator()
 
 def get_S_Sp(L, p):
     size = L.shape[0]
@@ -21,7 +21,7 @@ def get_S_Sp(L, p):
     S = H + v.dot(d.transpose())
     Sp = p * S + (1 - p) * v.dot(np.ones((1, size)))
 
-    return S,Sp
+    return S, Sp
 
 
 def exact_solution(S, p):
@@ -29,7 +29,7 @@ def exact_solution(S, p):
     k = (1 - p) / n
     M = np.linalg.inv((np.identity(n) - p * S))
     sol = k * M.dot(np.ones(n))
-    return sol.reshape((n,1))
+    return sol.reshape((n, 1))
 
 
 def pagerank(S, x, maxiters):
@@ -39,30 +39,36 @@ def pagerank(S, x, maxiters):
     return res
 
 
-def generate_x_L(size):
+def generate_x_L(size, t = 0.99):
     x = np.ones((size, 1))
     x /= size
     L = np.random.random((size, size))
-    t = 0.999
     L[L >= t] = 1
     L[L < t] = 0
     return x, L
 
 
-def solve_and_plot(L, x, p, desc, maxiters=100):
-    S,Sp = get_S_Sp(L, p)
-    exact = exact_solution(S, p)
+def solve(L, x, p, maxiters=100):
+    S, Sp = get_S_Sp(L, p)
     res = pagerank(Sp, x, maxiters)
+    return res
 
+
+def plot_p_comparison():
     fig = plt.figure(figsize=FIG_SIZE_2D, dpi=FIG_DPI_2D)
     plt.grid(**GRID_OPTIONS)
-    errors = [np.sum(np.abs(r - exact)) for r in res]
-    plt.plot( errors )
+    maxiters = 50
+    x, L = generate_x_L(500, 0.99)
+    for p in np.arange(0.2,0.99,0.11):
+        exact = exact_solution(get_S_Sp(L,p)[0],p)
+        res = solve(L,x,p,maxiters=maxiters)
+        errors = [np.sum(np.abs(r - exact)) for r in res]
+        plt.plot(range(maxiters+1), errors, '-'+next(PLOT_MARKER), label='p = %s' % p)
+
     plt.yscale('log')
-    plt.show()
+    plt.xlabel('Iterations - $L \in M^{500\\times500}$')
+    plt.ylabel(r'$\|\textbf x-\textbf x_k\|_1$')
+    plt.legend(loc='upper right')
+    plt.savefig('./figs/05-randomsurfer-p.eps', dpi=SAVE_FIG_DPI)
 
-
-
-x, L = generate_x_L(500)
-
-solve_and_plot(L, x, 0.9, '', maxiters=30)
+plot_p_comparison()
